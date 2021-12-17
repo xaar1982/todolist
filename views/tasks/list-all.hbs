@@ -3,6 +3,8 @@
     <input type="text">
     <button>Add Task</button>
     <ul>
-        <li></li>
+        {{#each tasks}}
+        <li>{{this.title}} | {{ pretty-date this.createDate }}</li>
+        {{/each}}
     </ul>
 </section>
