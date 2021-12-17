@@ -1,3 +1,5 @@
+# IDE dir
+.idea/*
 #Txt files
 *.txt
 # Logs

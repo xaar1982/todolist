@@ -1,5 +1,5 @@
-const {pool} = require("./utils/db");
-const {TodoRecord} = require("./records/todo.record");
+const { pool } = require("./utils/db");
+const { TodoRecord } = require("./records/todo.record");
 const { app } = require("./utils/express");
 
 app.listen(3000, 'localhost');
