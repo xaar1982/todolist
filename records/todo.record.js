@@ -42,6 +42,12 @@ class TodoRecord {
         });
         return new TodoRecord(results[0]);
     }
+    static async findAll() {
+        const [allTasks]  = await pool.execute('SELECT * FROM `todos` ORDER BY `createDate` ASC');
+        console.log(allTasks);
+        return allTasks;
+    }
+
 
     async update() {
         await pool.execute('UPDATE `todos` SET `title` = :title WHERE `id` = :id', {
