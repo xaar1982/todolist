@@ -4,10 +4,8 @@ const {TodoRecord} = require("../records/todo.record");
 const mainRouter = express.Router();
 
 mainRouter
-    .get('/', async (req,res) => {
-        res.render('tasks/list-all', {
-            tasks:  await TodoRecord.findAll()
-        });
+    .get('/',(req,res) => {
+        res.redirect('/task');
     })
 
 module.exports = {
