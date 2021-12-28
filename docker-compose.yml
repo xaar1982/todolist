@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  mariadb:
+    image: "mariadb:${MARIADB_VERSION}"
+    restart: always
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - mariadb_etc:/etc/mysql/conf.d
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MARIADB_USER: "${MYSQL_USER}"
+      MARIADB_PASSWORD: "${MYSQL_PASSWORD}"
+    ports:
+      - "3306:3306"
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+  phpmyadmin:
+    image: "phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION}"
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+    ports:
+      - "8080:80"
+
+volumes:
+  mariadb_data:
+    external: true
+  mariadb_etc:
+    external: true

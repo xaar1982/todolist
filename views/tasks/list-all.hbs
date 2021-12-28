@@ -1,10 +1,24 @@
 <section id="assignment">
     <h2>Assignment</h2>
-    <input type="text">
-    <button>Add Task</button>
+    <form method="POST" action="/task">
+        <label>
+            <input type="text" name="title">
+            <input type="date" name="createDate" value="">
+        </label>
+        <button type="submit">Add Task</button>
+    </form>
     <ul>
         {{#each tasks}}
-        <li>{{this.title}} | {{ pretty-date this.createDate }}</li>
+
+        <li>{{this.title}} | {{ pretty-date this.createDate }}
+        <form method="POST" action="/task/{{this.id}}?_method=DELETE">
+            <button type="submit">Remove Task</button>
+        </form>
+        <form method="GET" action="/task/forms/edit/{{this.id}}">
+            <button type="submit">Modify Task</button>
+        </form>
+        </li>
+
         {{/each}}
     </ul>
 </section>
