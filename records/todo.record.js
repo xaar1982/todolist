@@ -1,84 +1,38 @@
 const { pool } = require("../utils/db");
 const {v4: uuid} = require('uuid');
-const moment = require('moment');
-const {ValidatonError} = require("../utils/errors");
+const {ValidationError, handleError} = require("../utils/errors");
 
 class TodoRecord {
-    constructor(obj) {
-        //this.isValidated = this._validate();
-
+    constructor(obj,req,res) {
         this.id = obj.id;
         this.title = obj.title;
-       // this.createDate = moment(Date.now()).format('YYYY-MM-DD');
         this.createDate = obj.createDate;
-        this._validate()
-
     }
 
-    /* _validate() {
-        try {
-            if (this.title.trim().length < 5) {
-               // throw new Error(' Title should be at least 5 char ');
-                throw new ValidatonError('Title should be at least 5 char')
+    static _validate(title, createDate, req, res) {
+            if (title.trim().length < 5) {
+                return handleError(new ValidationError('Title should be at least 5 char'), req, res);
             }
-            else if (this.title.length > 150) {
-                throw new Error('Todo title should be at most than 150 characters');
+            else if (title.length > 150) {
+                return handleError(new ValidationError('Title should be at most than 150 characters'), req , res);
+            }
+            else if (createDate === '') {
+                return handleError(new ValidationError('Create time cannot be empty'), req, res);
             }
             else {
-                return {
-                    state: true,
-                    error: ''
-                }
+                return true;
             }
-        } catch (err) {
-            console.log(err.toString());
-            return {
-                state: false,
-                error: err.toString()
-            }
-        }
-
-    }*/
-    _validate() {
-       // try {
-            if (this.title.trim().length < 5) {
-               // throw new Error(' Title should be at least 5 char ');
-                throw new ValidatonError('Title should be at least 5 char')
-            }
-       //     else if (this.title.length > 150) {
-            if (this.title.length > 150) {
-                throw new Error('Todo title should be at most than 150 characters');
-            }
-          //  else {
-          //      return {
-          //          state: true,
-          //          error: ''
-          //      }
-          //  }
-        //} catch (err) {
-        //    console.log(err.toString());
-        //    return {
-        //        state: false,
-        //        error: err.toString()
-        //    }
-        //}
-
     }
 
     async insert() {
-        if (this.isValidated.state)
-        {
             this.id = this.id ?? uuid();
             await pool.execute('INSERT INTO `todos` VALUES (:id, :title, :createDate)', {
                 id: this.id,
                 title: this.title,
                 createDate: this.createDate
-            })
+        })
             return this.id;
-        }
-        else {
-            this.id = '';
-        }
+
     }
 
     async delete() {

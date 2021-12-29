@@ -1,18 +1,17 @@
-class ValidatonError extends Error {}
+class ValidationError extends Error {}
 
-const handleError = (err,req,res, next) => {
-    if (err instanceof ValidatonError) {
+function handleError (err,req,res, next) {
+    if (err instanceof ValidationError) {
         res
-            .status(err instanceof ValidatonError ? 400 : 500)
+            .status(err instanceof ValidationError ? 400 : 500)
             .render('error', {
-              message: err instanceof ValidatonError ? err.message : 'Please try again later'
+              message: err instanceof ValidationError ? err.message : 'Please try again later'
             })
+        return false;
     }
-
-
 }
 
 module.exports = {
     handleError,
-    ValidatonError
+    ValidationError
 }

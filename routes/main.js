@@ -1,5 +1,4 @@
 const express = require('express');
-const {TodoRecord} = require("../records/todo.record");
 
 const mainRouter = express.Router();
 

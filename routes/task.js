@@ -15,7 +15,6 @@ taskRouter
     })
     .get('/forms/edit/:id', async (req,res) =>{
         const task = await TodoRecord.find(req.params.id);
-
         if (!task) {
             throw new Error('Task not found');
         }
@@ -27,29 +26,25 @@ taskRouter
     })
     .post('/', async (req,res) => {
         const {title, createDate } = req.body;
-        const newToDoTask = new TodoRecord({
-            title,
-            createDate
-        })
-       // if (newToDoTask.isValidated.state) {
+        if (TodoRecord._validate(title, createDate, req, res)) {
+            const newToDoTask = new TodoRecord({
+                title,
+                createDate,
+            })
             await newToDoTask.insert();
             await renderAll(res);
-        //}
-        //else {
-        //    res
-        //        .render('error', {
-        //            message: newToDoTask.isValidated.error
-        //        })
-        //}
+        }
     })
     .put('/:id', async (req,res) => {
         const id = req.params.id;
         const { title, createDate } = req.body;
-        const task = await TodoRecord.find(id);
-        task.title = title;
-        task.createDate = createDate;
-        await task.update();
-        await renderAll(res);
+        if (TodoRecord._validate(title, createDate, req, res)) {
+            const task = await TodoRecord.find(id);
+            task.title = title;
+            task.createDate = createDate;
+            await task.update();
+            await renderAll(res);
+        }
     })
     .delete('/:id' , async (req,res) => {
         const id = req.params.id;

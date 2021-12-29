@@ -1,6 +1,7 @@
+const moment = require("moment");
 const handlebarsHelpers = {
     'pretty-date': (date) => {
-        return new Date(date).toDateString();
+        return moment(new Date(date)).format('YYYY-MM-DD');
     }
 }
 
