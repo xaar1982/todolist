@@ -6,15 +6,20 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - mariadb_etc:/etc/mysql/conf.d
+      - ./initial_database:/docker-entrypoint-initdb.d
     environment:
-      MARIADB_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MARIADB_USER: "${MYSQL_USER}"
-      MARIADB_PASSWORD: "${MYSQL_PASSWORD}"
+      MARIADB_DATABASE: "${DB_NAME}"
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/rootpass
+      MARIADB_USER: "${DB_USER}"
+      MARIADB_PASSWORD_FILE: /run/secrets/userpass
     ports:
-      - "3306:3306"
+      - "3306"
     command:
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
+    secrets:
+      - rootpass
+      - userpass
   phpmyadmin:
     image: "phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION}"
     restart: always
@@ -24,9 +29,39 @@ services:
       PMA_HOST: mariadb
     ports:
       - "8080:80"
+  app:
+    depends_on:
+      - mariadb
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_JS_VERSION=$NODE_JS_VERSION
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD_FILE: /run/secrets/userpass
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+    secrets:
+      - userpass
+    stdin_open: true
+    tty: true
+
 
 volumes:
   mariadb_data:
     external: true
   mariadb_etc:
     external: true
+
+secrets:
+  rootpass:
+    file: ./rootpass
+  userpass:
+    file: ./userpass
