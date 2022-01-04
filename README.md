@@ -1,4 +1,4 @@
-<b>Simple ToDo app<b><br>
+<b>Simple ToDo app</b><br>
 <br>
 Information:<br>
 1. Repo contains .env file with some initial settings, which can be changed<br>
