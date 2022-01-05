@@ -1,4 +1,4 @@
-<b>Simple ToDo app</b><br>
+<b>very simple ToDo app</b><br>
 <br>
 Information:<br>
 1. Repo contains .env file with some initial settings, which can be changed<br>
@@ -7,4 +7,6 @@ Information:<br>
 How to start:<br>
 <br>
 source .env <br>
-docker compose up
+docker compose up<br>
+<br>
+Browser: localhost:3000
